@@ -157,6 +157,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "git-tag-fork-point"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "git2",
+]
+
+[[package]]
 name = "git2"
 version = "0.18.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"

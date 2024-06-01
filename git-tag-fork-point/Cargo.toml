@@ -1,0 +1,16 @@
+[package]
+name = "git-tag-fork-point"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.86"
+clap = { version = "4.5.4", features = ["derive"] }
+git2 = "0.18.3"
+
+
+[[bin]]
+name = "git-tag-fork-point"
+path = "src/main.rs"
