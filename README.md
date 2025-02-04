@@ -13,6 +13,10 @@
 
 ## Provided Tools
 
+## git-branch-stale
+
+Shows a list of stale git branches.
+
 ### git-fake-commit
 
 #### Description

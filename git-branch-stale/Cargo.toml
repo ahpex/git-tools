@@ -1,0 +1,19 @@
+[package]
+name = "git-branch-stale"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.86"
+chrono = "0.4.38"
+clap = { version = "4.5.4", features = ["derive"] }
+git2 = "0.18.3"
+nu-ansi-term = "0.50.0"
+uuid = { version = "1.8.0", features = ["v4"] }
+
+
+[[bin]]
+name = "git-branch-stale"
+path = "src/main.rs"

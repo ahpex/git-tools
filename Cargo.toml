@@ -1,6 +1,3 @@
 [workspace]
 resolver = "2"
-members = [
-    "git-tag-fork-point",
-    "git-fake-commit",
-]
+members = ["git-tag-fork-point", "git-fake-commit", "git-branch-stale"]
