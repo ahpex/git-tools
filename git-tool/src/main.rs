@@ -107,7 +107,7 @@ fn get_current_branch_name(repo: &Repository) -> Result<String> {
 fn handle_branch_issue(repo: &Repository) -> Result<()> {
     let branch_name = get_current_branch_name(repo)?;
 
-    match IssueNumber::parse(&branch_name) {
+    match IssueNumber::new(&branch_name) {
         Some(issue) => {
             println!("{}", issue.as_str());
         }

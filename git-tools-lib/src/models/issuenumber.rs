@@ -19,7 +19,7 @@ fn issue_id_regex() -> &'static regex::Regex {
 ///
 /// ```
 /// # use git_tools_lib::models::IssueNumber;
-/// let issue = IssueNumber::parse("ABC-123").unwrap();
+/// let issue = IssueNumber::new("ABC-123").unwrap();
 /// assert_eq!(issue.as_str(), "ABC-123");
 /// ```
 ///
@@ -27,7 +27,7 @@ fn issue_id_regex() -> &'static regex::Regex {
 ///
 /// ```
 /// # use git_tools_lib::models::IssueNumber;
-/// let issue = IssueNumber::parse("Fix bug in DS-789 feature").unwrap();
+/// let issue = IssueNumber::new("Fix bug in DS-789 feature").unwrap();
 /// assert_eq!(issue.as_str(), "DS-789");
 /// ```
 ///
@@ -35,7 +35,7 @@ fn issue_id_regex() -> &'static regex::Regex {
 ///
 /// ```
 /// # use git_tools_lib::models::IssueNumber;
-/// let issue = IssueNumber::parse("wsquak-765").unwrap();
+/// let issue = IssueNumber::new("wsquak-765").unwrap();
 /// assert_eq!(issue.as_str(), "WSQUAK-765");
 /// ```
 ///
@@ -43,14 +43,14 @@ fn issue_id_regex() -> &'static regex::Regex {
 ///
 /// ```
 /// # use git_tools_lib::models::IssueNumber;
-/// assert!(IssueNumber::parse("no issue here").is_none());
+/// assert!(IssueNumber::new("no issue here").is_none());
 /// ```
 pub struct IssueNumber {
     inner: String,
 }
 
 impl IssueNumber {
-    /// Parses a string to extract an issue number.
+    /// Returns a new `IssueNumber` by parsing a string to extract an issue number.
     ///
     /// This method searches for a pattern matching issue number format (e.g., "ABC-123") in the
     /// provided text. If found, the matched issue number is normalized to uppercase and returned
@@ -70,7 +70,7 @@ impl IssueNumber {
     ///
     /// ```
     /// # use git_tools_lib::models::IssueNumber;
-    /// let issue = IssueNumber::parse("ABC-123");
+    /// let issue = IssueNumber::new("ABC-123");
     /// assert!(issue.is_some());
     /// assert_eq!(issue.unwrap().as_str(), "ABC-123");
     /// ```
@@ -80,7 +80,7 @@ impl IssueNumber {
     /// ```
     /// # use git_tools_lib::models::IssueNumber;
     /// let text = String::from("feat: implement feature DS-789 for testing");
-    /// let issue = IssueNumber::parse(text);
+    /// let issue = IssueNumber::new(text);
     /// assert_eq!(issue.unwrap().as_str(), "DS-789");
     /// ```
     ///
@@ -88,10 +88,10 @@ impl IssueNumber {
     ///
     /// ```
     /// # use git_tools_lib::models::IssueNumber;
-    /// let issue = IssueNumber::parse("feat: implement feature DS-789 for testing");
+    /// let issue = IssueNumber::new("feat: implement feature DS-789 for testing");
     /// assert_eq!(issue.unwrap().as_str(), "DS-789");
     /// ```
-    pub fn parse<S: AsRef<str>>(text: S) -> Option<Self> {
+    pub fn new<S: AsRef<str>>(text: S) -> Option<Self> {
         issue_id_regex()
             .find(&text.as_ref().to_lowercase())
             .map(|mat| Self {
@@ -105,7 +105,7 @@ impl IssueNumber {
     ///
     /// ```
     /// # use git_tools_lib::models::IssueNumber;
-    /// let issue = IssueNumber::parse("WSQUAK-765").unwrap();
+    /// let issue = IssueNumber::new("WSQUAK-765").unwrap();
     /// assert_eq!(issue.as_str(), "WSQUAK-765");
     /// ```
     pub fn as_str(&self) -> &str {
@@ -121,7 +121,7 @@ impl AsRef<str> for IssueNumber {
     /// ```
     /// # use git_tools_lib::models::IssueNumber;
     /// use std::convert::AsRef;
-    /// let issue = IssueNumber::parse("ABC-123").unwrap();
+    /// let issue = IssueNumber::new("ABC-123").unwrap();
     /// let s: &str = issue.as_ref();
     /// assert_eq!(s, "ABC-123");
     /// ```
@@ -137,7 +137,7 @@ impl Display for IssueNumber {
     ///
     /// ```
     /// # use git_tools_lib::models::IssueNumber;
-    /// let issue = IssueNumber::parse("ABC-123").unwrap();
+    /// let issue = IssueNumber::new("ABC-123").unwrap();
     /// assert_eq!(format!("{}", issue), "ABC-123");
     /// ```
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -151,26 +151,26 @@ mod tests {
 
     #[test]
     fn test_issue_number_parsing() {
-        assert!(IssueNumber::parse("ABC-123").is_some());
-        assert!(IssueNumber::parse("a-123").is_some());
-        assert!(IssueNumber::parse("NeVeRmOrE-1").is_some());
-        assert!(IssueNumber::parse("ABCA-456").is_some());
-        assert!(IssueNumber::parse("DS-789").is_some());
-        assert!(IssueNumber::parse("this is DS-789 text").is_some());
+        assert!(IssueNumber::new("ABC-123").is_some());
+        assert!(IssueNumber::new("a-123").is_some());
+        assert!(IssueNumber::new("NeVeRmOrE-1").is_some());
+        assert!(IssueNumber::new("ABCA-456").is_some());
+        assert!(IssueNumber::new("DS-789").is_some());
+        assert!(IssueNumber::new("this is DS-789 text").is_some());
 
-        assert!(IssueNumber::parse("no issue here").is_none());
-        assert!(IssueNumber::parse("").is_none());
+        assert!(IssueNumber::new("no issue here").is_none());
+        assert!(IssueNumber::new("").is_none());
     }
 
     #[test]
     fn test_issue_number_as_str() {
         assert_eq!(
             "WSQUAK-765",
-            IssueNumber::parse("WSQUAK-765").unwrap().as_str()
+            IssueNumber::new("WSQUAK-765").unwrap().as_str()
         );
         assert_eq!(
             "DS-789",
-            IssueNumber::parse("text DS-789 text").unwrap().as_str()
+            IssueNumber::new("text DS-789 text").unwrap().as_str()
         );
     }
 
@@ -178,7 +178,7 @@ mod tests {
     fn test_issue_number_uppercased() {
         assert_eq!(
             "WSQUAK-765",
-            IssueNumber::parse("wsquak-765").unwrap().as_str()
+            IssueNumber::new("wsquak-765").unwrap().as_str()
         );
     }
 
@@ -186,13 +186,11 @@ mod tests {
     fn test_issue_number_first_match() {
         assert_eq!(
             "WSQUAK-123",
-            IssueNumber::parse("WSQUAK-123, ABC-10000")
-                .unwrap()
-                .as_str()
+            IssueNumber::new("WSQUAK-123, ABC-10000").unwrap().as_str()
         );
         assert_eq!(
             "WSQUAK-287",
-            IssueNumber::parse("text WSQUAK-287 text").unwrap().as_str()
+            IssueNumber::new("text WSQUAK-287 text").unwrap().as_str()
         );
     }
 }

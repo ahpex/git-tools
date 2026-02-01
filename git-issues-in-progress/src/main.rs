@@ -79,7 +79,7 @@ fn collect_branch_summary(
                     Some(IssueInProgress {
                         name: branch_name.clone(),
                         author: commit.author().name()?.to_owned(),
-                        issue: IssueNumber::parse(commit.message()?),
+                        issue: IssueNumber::new(commit.message()?),
                     })
                 })
                 .collect::<HashSet<_>>();
