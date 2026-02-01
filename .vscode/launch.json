@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug git-first-mention",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/target/debug/git-first-mention.exe",
+            "args": [
+                "-s",
+                "git-first-mention"
+            ],
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "preLaunchTask": "cargo build",
+            "stopAtEntry": false
+        }
+    ]
+}

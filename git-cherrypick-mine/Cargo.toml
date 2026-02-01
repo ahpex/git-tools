@@ -1,0 +1,18 @@
+[package]
+name = "git-cherrypick-mine"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+git2 = { workspace = true }
+nu-ansi-term = { workspace = true }
+git-tools-lib = { path = "../git-tools-lib" }
+
+[[bin]]
+name = "git-cherrypick-mine"
+path = "src/main.rs"
+
+[lints]
+workspace = true

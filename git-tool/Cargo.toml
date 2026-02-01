@@ -1,0 +1,11 @@
+[package]
+name = "git-tool"
+version = "0.1.0"
+edition = "2021"
+description = "A unified git utility tool with multiple subcommands"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+git2 = "0.20"
+git-tools-lib = { path = "../git-tools-lib" }

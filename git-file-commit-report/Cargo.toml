@@ -1,0 +1,23 @@
+[package]
+name = "git-file-commit-report"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+git2 = { workspace = true }
+nu-ansi-term = { workspace = true }
+regex = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+
+[[bin]]
+name = "git-file-commit-report"
+path = "src/main.rs"
+
+[lints]
+workspace = true
