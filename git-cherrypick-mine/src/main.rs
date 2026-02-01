@@ -49,7 +49,7 @@ fn main() -> Result<()> {
     let mut my_commits: Vec<Commit<'_>> = revwalk
         .filter_map(Result::ok)
         .filter_map(|oid| repo.find_commit(oid).ok())
-        .filter(|commit_opt| its_me.is_same(&commit_opt.author()))
+        .filter(|commit_opt| its_me.is_same_identity(&commit_opt.author()))
         .collect();
 
     if my_commits.is_empty() {

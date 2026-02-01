@@ -22,7 +22,7 @@
 //! use git_tools_lib::{IssueNumber, RepositoryExt, is_bot_commit};
 //!
 //! // Parse an issue number from text
-//! if let Some(issue) = IssueNumber::parse("feat: ABC-123 add new feature") {
+//! if let Some(issue) = IssueNumber::new("feat: ABC-123 add new feature") {
 //!     println!("Found issue: {}", issue);
 //! }
 //!

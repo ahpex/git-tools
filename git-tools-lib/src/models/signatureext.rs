@@ -15,7 +15,7 @@ use git2::Signature;
 /// let sig2 = Signature::now("Alice", "alice@example.com").unwrap();
 ///
 /// // Compare signatures by name and email (ignores timestamp)
-/// assert!(sig1.is_same(&sig2));
+/// assert!(sig1.is_same_identity(&sig2));
 /// ```
 pub trait SignatureExt {
     /// Checks if two signatures have the same identity (name and email).
@@ -30,11 +30,11 @@ pub trait SignatureExt {
     /// # Returns
     ///
     /// `true` if both signatures have the same name and email, `false` otherwise.
-    fn is_same(&self, other: &Signature<'_>) -> bool;
+    fn is_same_identity(&self, other: &Signature<'_>) -> bool;
 }
 
 impl SignatureExt for Signature<'_> {
-    fn is_same(&self, other: &Signature<'_>) -> bool {
+    fn is_same_identity(&self, other: &Signature<'_>) -> bool {
         self.name() == other.name() && self.email() == other.email()
     }
 }
@@ -44,23 +44,23 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_is_same_equal() {
+    fn test_is_same_identity_equal() {
         let sig1 = Signature::now("Alice", "alice@example.com").unwrap();
         let sig2 = Signature::now("Alice", "alice@example.com").unwrap();
-        assert!(sig1.is_same(&sig2));
+        assert!(sig1.is_same_identity(&sig2));
     }
 
     #[test]
-    fn test_is_same_different_name() {
+    fn test_is_same_identity_different_name() {
         let sig1 = Signature::now("Alice", "alice@example.com").unwrap();
         let sig2 = Signature::now("Bob", "alice@example.com").unwrap();
-        assert!(!sig1.is_same(&sig2));
+        assert!(!sig1.is_same_identity(&sig2));
     }
 
     #[test]
-    fn test_is_same_different_email() {
+    fn test_is_same_identity_different_email() {
         let sig1 = Signature::now("Alice", "alice@example.com").unwrap();
         let sig2 = Signature::now("Alice", "bob@example.com").unwrap();
-        assert!(!sig1.is_same(&sig2));
+        assert!(!sig1.is_same_identity(&sig2));
     }
 }
