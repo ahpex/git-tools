@@ -102,26 +102,106 @@ pub fn is_bot_commit(repo: &Repository, oid: &Oid) -> bool {
 ///
 /// ```no_run
 /// use git2::Repository;
-/// use git_tools_lib::index_has_staged_changes;
+/// use git_tools_lib::index_is_clean;
 ///
 /// let repo = Repository::open(".").unwrap();
-/// match index_has_staged_changes(&repo) {
+/// match index_is_clean(&repo) {
 ///     Ok(true) => println!("There are staged changes"),
 ///     Ok(false) => println!("No staged changes"),
 ///     Err(e) => eprintln!("Error: {}", e),
 /// }
 /// ```
-pub fn index_has_staged_changes(repo: &Repository) -> Result<bool> {
+pub fn index_is_clean(repo: &Repository) -> Result<bool> {
     let mut opts = StatusOptions::new();
+    opts.include_untracked(true);
     let statuses = repo.statuses(Some(&mut opts))?;
 
-    Ok(statuses.iter().any(|entry| {
+    Ok(!statuses.iter().any(|entry| {
         let status = entry.status();
         status.is_index_new()
             || status.is_index_modified()
             || status.is_index_deleted()
             || status.is_index_renamed()
             || status.is_index_typechange()
+    }))
+}
+
+/// Checks if the repository working tree is clean.
+///
+/// This function inspects the repository's status to determine if there are any
+/// changes in the working tree (unstaged modifications), including:
+/// - New untracked files
+/// - Modified files in the working tree
+/// - Deleted files in the working tree
+/// - Renamed files
+/// - Type changes (e.g., file to symlink)
+///
+/// # Arguments
+///
+/// * `repo` - A reference to the git repository to check
+///
+/// # Returns
+///
+/// * `Ok(true)` - If the working tree is clean
+/// * `Ok(false)` - If there are changes in the working tree
+/// * `Err(Error)` - If there was an error reading the repository status
+pub fn workspace_is_clean(repo: &Repository) -> Result<bool> {
+    let mut opts = StatusOptions::new();
+    opts.include_untracked(true);
+    let statuses = repo.statuses(Some(&mut opts))?;
+
+    Ok(!statuses.iter().any(|entry| {
+        let status = entry.status();
+        status.is_wt_new()
+            || status.is_wt_modified()
+            || status.is_wt_deleted()
+            || status.is_wt_renamed()
+            || status.is_wt_typechange()
+    }))
+}
+
+/// Checks if the entire repository is clean.
+///
+/// A repository is considered clean if:
+/// - The index (staging area) has no staged changes
+/// - The working tree has no unstaged changes
+/// - There are no untracked files
+///
+/// # Arguments
+///
+/// * `repo` - A reference to the git repository to check
+///
+/// # Returns
+///
+/// * `Ok(true)` - If the repository is completely clean
+/// * `Ok(false)` - If there are any staged, unstaged, or untracked changes
+/// * `Err(Error)` - If there was an error reading the repository status
+pub fn is_clean(repo: &Repository) -> Result<bool> {
+    Ok(index_is_clean(repo)? && workspace_is_clean(repo)?)
+}
+
+/// Checks if the repository has untracked files.
+///
+/// Returns `true` if there are any files in the working tree that are not tracked
+/// by git (i.e., not in the index and not in any commit).
+///
+/// # Arguments
+///
+/// * `repo` - A reference to the git repository to check
+///
+/// # Returns
+///
+/// * `Ok(true)` - If there are untracked files
+/// * `Ok(false)` - If there are no untracked files
+/// * `Err(Error)` - If there was an error reading the repository status
+pub fn has_untracked_files(repo: &Repository) -> Result<bool> {
+    let mut opts = StatusOptions::new();
+    opts.include_untracked(true);
+    let statuses = repo.statuses(Some(&mut opts))?;
+
+    Ok(statuses.iter().any(|entry| {
+        let status = entry.status();
+        status.is_wt_new()
     }))
 }
 

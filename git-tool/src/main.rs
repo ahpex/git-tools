@@ -27,12 +27,23 @@ enum Commands {
         #[arg(long)]
         issue: bool,
     },
+    /// Commands related to repository operations
+    Repo {
+        #[command(subcommand)]
+        action: Option<RepoAction>,
+    },
 }
 
 #[derive(Subcommand)]
 enum BranchAction {
     /// List branches (placeholder for future functionality)
     List,
+}
+
+#[derive(Subcommand)]
+enum RepoAction {
+    /// Check if repo is clean
+    IsClean,
 }
 
 fn main() -> Result<()> {
@@ -55,6 +66,26 @@ fn main() -> Result<()> {
                 // Default behavior: show current branch name
                 let branch_name = get_current_branch_name(&repo)?;
                 println!("{}", branch_name);
+            }
+        }
+        Commands::Repo { action } => {
+            if let Some(action) = action {
+                match action {
+                    RepoAction::IsClean => match git_tools_lib::is_clean(&repo) {
+                        Ok(clean) => {
+                            if clean {
+                                println!("Repository is clean");
+                            } else {
+                                println!("Repository is not clean");
+                                std::process::exit(1);
+                            }
+                        }
+                        Err(e) => {
+                            eprintln!("Error checking if repository is clean: {}", e);
+                            std::process::exit(1);
+                        }
+                    },
+                }
             }
         }
     }
